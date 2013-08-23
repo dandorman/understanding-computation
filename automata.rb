@@ -148,19 +148,19 @@ end
 # p nfa_design.accepts?("bbbbb")
 # p nfa_design.accepts?("bbabb")
 
-rulebook = NFARulebook.new([
-  FARule.new(1, nil, 2), FARule.new(1, nil, 4),
-  FARule.new(2, ?a, 3),
-  FARule.new(3, ?a, 2),
-  FARule.new(4, ?a, 5),
-  FARule.new(5, ?a, 6),
-  FARule.new(6, ?a, 4)
-])
+# rulebook = NFARulebook.new([
+#   FARule.new(1, nil, 2), FARule.new(1, nil, 4),
+#   FARule.new(2, ?a, 3),
+#   FARule.new(3, ?a, 2),
+#   FARule.new(4, ?a, 5),
+#   FARule.new(5, ?a, 6),
+#   FARule.new(6, ?a, 4)
+# ])
 
 # p rulebook.next_states(Set[1], nil)
 
-nfa_design = NFADesign.new(1, [2, 4], rulebook)
-p nfa_design.accepts?(?a * 2)
-p nfa_design.accepts?(?a * 3)
-p nfa_design.accepts?(?a * 5)
-p nfa_design.accepts?(?a * 6)
+# nfa_design = NFADesign.new(1, [2, 4], rulebook)
+# p nfa_design.accepts?(?a * 2)
+# p nfa_design.accepts?(?a * 3)
+# p nfa_design.accepts?(?a * 5)
+# p nfa_design.accepts?(?a * 6)
