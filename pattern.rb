@@ -179,18 +179,26 @@ module Pattern
   # p pattern.matches?(?a * 4)
   # p pattern.matches?(?b * 1)
 
-  p pattern = Repeat.new(
-    Concatenate.new(
-      Literal.new(?a),
-      Choose.new(Empty.new, Literal.new(?b))
-    )
-  )
+  # p pattern = Repeat.new(
+  #   Concatenate.new(
+  #     Literal.new(?a),
+  #     Choose.new(Empty.new, Literal.new(?b))
+  #   )
+  # )
 
-  p pattern.matches?("")
-  p pattern.matches?("a")
-  p pattern.matches?("ab")
-  p pattern.matches?("aba")
-  p pattern.matches?("abab")
-  p pattern.matches?("abaab")
-  p pattern.matches?("abba")
+  # p pattern.matches?("")
+  # p pattern.matches?("a")
+  # p pattern.matches?("ab")
+  # p pattern.matches?("aba")
+  # p pattern.matches?("abab")
+  # p pattern.matches?("abaab")
+  # p pattern.matches?("abba")
 end
+
+require "treetop"
+Treetop.load("pattern")
+
+p parse_tree = PatternParser.new.parse("(a(|b))*")
+p pattern = parse_tree.to_ast
+p pattern.matches?("abaab")
+p pattern.matches?("abba")
