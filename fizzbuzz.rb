@@ -170,8 +170,6 @@ def to_string(s)
   to_array(s).map { |c| to_char(c) }.join
 end
 
-p to_array(MULTIPLY_STREAMS[UPWARDS_OF[ONE]][MULTIPLES_OF[THREE]], 10).map { |p| to_integer(p) }
-
 __END__
 solution = MAP[RANGE[ONE][HUNDRED]][-> n {
   IF[IS_ZERO[MOD[n][FIFTEEN]]][
