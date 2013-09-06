@@ -73,54 +73,60 @@ LCCall = Struct.new(:left, :right) do
   end
 end
 
-one =
-  LCFunction.new(
-    :p,
-    LCFunction.new(
-      :x,
-      LCCall.new(LCVariable.new(:p), LCVariable.new(:x))
-    )
-)
+# one =
+#   LCFunction.new(
+#     :p,
+#     LCFunction.new(
+#       :x,
+#       LCCall.new(LCVariable.new(:p), LCVariable.new(:x))
+#     )
+# )
 
-increment =
-  LCFunction.new(
-    :n,
-    LCFunction.new(
-      :p,
-      LCFunction.new(
-        :x,
-        LCCall.new(
-          LCVariable.new(:p),
-          LCCall.new(
-            LCCall.new(LCVariable.new(:n), LCVariable.new(:p)),
-            LCVariable.new(:x)
-          )
-        )
-      )
-    )
-)
+# increment =
+#   LCFunction.new(
+#     :n,
+#     LCFunction.new(
+#       :p,
+#       LCFunction.new(
+#         :x,
+#         LCCall.new(
+#           LCVariable.new(:p),
+#           LCCall.new(
+#             LCCall.new(LCVariable.new(:n), LCVariable.new(:p)),
+#             LCVariable.new(:x)
+#           )
+#         )
+#       )
+#     )
+# )
 
-add =
-  LCFunction.new(
-    :m,
-    LCFunction.new(
-      :n,
-      LCCall.new(LCCall.new(LCVariable.new(:n), increment), LCVariable.new(:m))
-    )
-)
+# add =
+#   LCFunction.new(
+#     :m,
+#     LCFunction.new(
+#       :n,
+#       LCCall.new(LCCall.new(LCVariable.new(:n), increment), LCVariable.new(:m))
+#     )
+# )
 
-inc, zero = LCVariable.new(:inc), LCVariable.new(:zero)
+# inc, zero = LCVariable.new(:inc), LCVariable.new(:zero)
 
-expression = LCCall.new(LCCall.new(add, one), one)
-while expression.reducible?
-  expression
-  expression = expression.reduce
-end
-expression
+# expression = LCCall.new(LCCall.new(add, one), one)
+# while expression.reducible?
+#   expression
+#   expression = expression.reduce
+# end
+# expression
 
-expression = LCCall.new(LCCall.new(expression, inc), zero)
-while expression.reducible?
-  p expression
-  expression = expression.reduce
-end
-p expression
+# expression = LCCall.new(LCCall.new(expression, inc), zero)
+# while expression.reducible?
+#   p expression
+#   expression = expression.reduce
+# end
+# p expression
+
+require "treetop"
+Treetop.load("lambda")
+parse_tree = LambdaCalculusParser.new.parse("-> x { x[x] }[-> y { y }]")
+expression = parse_tree.to_ast
+expression.reduce
