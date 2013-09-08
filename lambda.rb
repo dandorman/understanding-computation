@@ -125,8 +125,8 @@ end
 # end
 # p expression
 
-require "treetop"
-Treetop.load("lambda")
-parse_tree = LambdaCalculusParser.new.parse("-> x { x[x] }[-> y { y }]")
-expression = parse_tree.to_ast
-expression.reduce
+# require "treetop"
+# Treetop.load("lambda")
+# parse_tree = LambdaCalculusParser.new.parse("-> x { x[x] }[-> y { y }]")
+# expression = parse_tree.to_ast
+# expression.reduce
