@@ -32,6 +32,10 @@ Number = Struct.new(:value) do
   def inspect
     "«#{self}»"
   end
+
+  def type(context)
+    Type::NUMBER
+  end
 end
 
 Add = Struct.new(:left, :right) do
@@ -63,6 +67,12 @@ Add = Struct.new(:left, :right) do
 
   def inspect
     "«#{self}»"
+  end
+
+  def type(context)
+    if left.type(context) == Type::NUMBER && right.type(context) == Type::NUMBER
+      Type::NUMBER
+    end
   end
 end
 
@@ -96,6 +106,12 @@ Multiply = Struct.new(:left, :right) do
   def inspect
     "«#{self}»"
   end
+
+  def type(context)
+    if left.type(context) == Type::NUMBER && right.type(context) == Type::NUMBER
+      Type::NUMBER
+    end
+  end
 end
 
 Boolean = Struct.new(:value) do
@@ -117,6 +133,10 @@ Boolean = Struct.new(:value) do
 
   def inspect
     "«#{self}»"
+  end
+
+  def type(context)
+    Type::BOOLEAN
   end
 end
 
@@ -150,6 +170,12 @@ LessThan = Struct.new(:left, :right) do
   def inspect
     "«#{self}»"
   end
+
+  def type(context)
+    if left.type(context) == Type::NUMBER && right.type(context) == Type::NUMBER
+      Type::BOOLEAN
+    end
+  end
 end
 
 Variable = Struct.new(:name) do
@@ -176,6 +202,10 @@ Variable = Struct.new(:name) do
   def inspect
     "«#{self}»"
   end
+
+  def type(context)
+    context[name]
+  end
 end
 
 class DoNothing
@@ -201,6 +231,10 @@ class DoNothing
 
   def ==(other_statement)
     other_statement.instance_of?(DoNothing)
+  end
+
+  def type(context)
+    Type::VOID
   end
 end
 
@@ -231,6 +265,12 @@ Assign = Struct.new(:name, :expression) do
 
   def inspect
     "«#{self}»"
+  end
+
+  def type(context)
+    if context[name] == expression.type(context)
+      Type::VOID
+    end
   end
 end
 
@@ -275,6 +315,15 @@ If = Struct.new(:condition, :consequence, :alternative) do
   def inspect
     "«#{self}»"
   end
+
+  def type(context)
+    if condition.type(context) == Type::BOOLEAN &&
+      consequence.type(context) == Type::VOID &&
+      alternative.type(context) == Type::VOID
+
+      Type::VOID
+    end
+  end
 end
 
 Sequence = Struct.new(:first, :second) do
@@ -307,6 +356,12 @@ Sequence = Struct.new(:first, :second) do
   def inspect
     "«#{self}»"
   end
+
+  def type(context)
+    if first.type(context) == Type::VOID && second.type(context) == Type::VOID
+      Type::VOID
+    end
+  end
 end
 
 While = Struct.new(:condition, :body) do
@@ -331,7 +386,7 @@ While = Struct.new(:condition, :body) do
     "-> e { " \
       "while (#{condition.to_ruby}).call(e); e = (#{body.to_ruby}).call(e); end; " \
       "e " \
-      "}"
+    "}"
   end
 
   def to_s
@@ -341,4 +396,22 @@ While = Struct.new(:condition, :body) do
   def inspect
     "«#{self}»"
   end
+
+  def type(context)
+    if condition.type(context) == Type::BOOLEAN && body.type(context) == Type::VOID
+      Type::VOID
+    end
+  end
 end
+
+Type = Struct.new(:name) do
+  NUMBER, BOOLEAN, VOID = [:number, :boolean, :void].map { |name| new(name) }
+
+  def inspect
+    "#<Type #{name}>"
+  end
+end
+
+statement = Assign.new(:x, Add.new(Variable.new(:x), Number.new(1)))
+statement.type(x: Type::NUMBER)
+statement.evaluate({})
